@@ -16,6 +16,9 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "moduleResolution": "node",  // Add this for proper module resolution
+    "esModuleInterop": true,      // Ensure ES module compatibility
+    "resolveJsonModule": true     // Enable importing JSON files as modules
   }
 }
