@@ -15,7 +15,7 @@ export class OpenAiService {
   async generateText(prompt: string): Promise<string> {
     const response = await this.openai.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
-      model: 'gpt-4o-mini-2024-07-18',  // Ensure you're using the correct GPT-4o mini model
+      model: 'gpt-4o-2024-11-20',
     });
 
     return response.choices[0]?.message?.content?.trim() || '';
