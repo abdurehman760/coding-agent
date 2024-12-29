@@ -3,6 +3,6 @@ import { FileManagerService } from './file-manager.service';
 
 @Module({
   providers: [FileManagerService],
-  exports: [FileManagerService] // Export the service
+  exports: [FileManagerService],
 })
 export class FileManagerModule {}

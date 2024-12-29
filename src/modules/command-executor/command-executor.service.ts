@@ -15,6 +15,8 @@ export class CommandExecutorService {
     'cat',
     'echo',
     'touch',
+    'npm install',
+    'npm run build',
   ];
 
   // Execute a shell command and return the output

@@ -12,7 +12,7 @@ export class CodeGeneratorService {
   ) {}
 
   // Method to generate a React component based on the name and props
-  async generateReactComponent(name: string, props: string[], filePath: string): Promise<string> {
+  async generateReactComponent(name: string, props: any, folderPath: string): Promise<string> {
     const prompt = `
       Generate a React functional component named ${name} in JSX format with the following props: ${props.join(', ')}.
       The component should include:
@@ -22,15 +22,20 @@ export class CodeGeneratorService {
       - Do not include any enclosing markdown blocks like \`\`\`jsx or \`\`\`.
     `;
 
+    console.log(`Generating React component with prompt: \n${prompt}`);
+
     try {
       // Use OpenAiService to generate the code based on the prompt
       const generatedCode = await this.openAiService.generateText(prompt);
+      console.log(`Generated code: \n${generatedCode}`);
 
       // Save the generated code to a specified file
+      const filePath = `${folderPath}/${name}.tsx`;
       await this.fileManagerService.writeFile(filePath, generatedCode);
 
-      return `React component ${name} generated and saved to ${filePath}.`;
+      return generatedCode;
     } catch (error) {
+      console.error(`Error generating React component: ${error.message}`);
       throw new Error(`Failed to generate React component: ${error.message}`);
     }
   }
@@ -55,7 +60,7 @@ export class CodeGeneratorService {
       // Save the modified code back to the file
       await this.fileManagerService.writeFile(filePath, modifiedCode);
 
-      return `Code modified and saved to ${filePath}.`;
+      return modifiedCode;
     } catch (error) {
       throw new Error(`Failed to modify code in file: ${error.message}`);
     }
