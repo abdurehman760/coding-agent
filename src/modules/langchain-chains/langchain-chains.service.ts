@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { SequentialChain } from 'langchain/chains';
 import * as path from 'path';
 import { FileManagerService } from '../file-manager/file-manager.service';
 import { OpenAiService } from '../../openai/openai.service';
+import { FileReaderTool, FileWriterTool } from '../file-manager/file-manager.service';
 
 @Injectable()
 export class LangChainChainsService {
@@ -30,20 +30,27 @@ export class LangChainChainsService {
         await this.fileManagerService.writeFile(filePath, defaultContent); // Create the file with default content
       }
 
-      // Step 2: Read file
-      const fileContent = await this.fileManagerService.readFile(filePath);
+      // Step 2: Use FileReaderTool to read the file content dynamically
+      const fileReaderTool = new FileReaderTool();
+      const fileContent = await fileReaderTool._call(filePath);
 
-      // Step 3: Generate code using OpenAI
+      // Step 3: Generate code using OpenAI based on the file content
       const prompt = `
-        Based on the following content:
+        Based on the following content, generate a functional React component. 
+        The component should be fully functional, include necessary imports (e.g., React), 
+        and should not  be wrapped in a 'javascript' code block.
+        Only provide the code, no explanations or extra text:
         ${fileContent}
-        Generate a new React functional component with improvements.
       `;
       const generatedCode = await this.openAiService.generateText(prompt);
 
-      // Step 4: Save file
-      const outputPath = path.join(resolvedDirectoryPath, outputFile);
-      await this.fileManagerService.writeFile(outputPath, generatedCode);
+      // Step 4: Ensure the output file has a `.jsx` extension
+      const outputFileWithExtension = outputFile.endsWith('.jsx') ? outputFile : `${outputFile}.jsx`;
+
+      // Step 5: Use FileWriterTool to save the generated code in the correct output file
+      const fileWriterTool = new FileWriterTool();
+      const outputPath = path.join(resolvedDirectoryPath, outputFileWithExtension);
+      await fileWriterTool._call({ filePath: outputPath, content: generatedCode });
 
       return `Chain executed successfully. Generated file saved at: ${outputPath}`;
     } catch (error) {

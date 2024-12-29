@@ -1,4 +1,4 @@
-// relative path: src/modules/code-generator/code-generator.service.ts
+//src\modules\code-generator\code-generator.service.ts
 
 import { Injectable } from '@nestjs/common';
 import { FileManagerService } from '../file-manager/file-manager.service';

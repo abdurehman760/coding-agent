@@ -1,3 +1,4 @@
+//src\test\test.controller.ts
 import { Controller, Post, Body } from '@nestjs/common';
 import { CodeGeneratorService } from '../modules/code-generator/code-generator.service';
 import { LangChainChainsService } from '../modules/langchain-chains/langchain-chains.service';
@@ -6,7 +7,7 @@ import { LangChainChainsService } from '../modules/langchain-chains/langchain-ch
 export class TestController {
   constructor(
     private readonly codeGeneratorService: CodeGeneratorService,
-    private readonly langChainChainsService: LangChainChainsService, // Inject the LangChainChainsService
+    private readonly langChainChainsService: LangChainChainsService, // Inject LangChainChainsService
   ) {}
 
   @Post('generate-component')

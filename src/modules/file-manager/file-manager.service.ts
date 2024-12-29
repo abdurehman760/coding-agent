@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
+import { Tool } from 'langchain/tools';
 
 // Promisify fs functions for async usage
 const fsReadFile = promisify(fs.readFile);
@@ -76,35 +77,62 @@ export class FileManagerService {
       throw new Error(`Failed to list directory at ${directoryPath}: ${error.message}`);
     }
   }
+
+  // Get a LangChain-compatible tool for file operations
+  getFileTool(): Tool {
+    return new (class extends Tool {
+      name = 'FileManagerTool';
+      description = 'Performs file and directory operations on the filesystem';
+
+      async _call(input: { action: string; args: any }): Promise<any> {
+        const { action, args } = input;
+
+        switch (action) {
+          case 'readFile':
+            return await FileManagerService.prototype.readFile.call(this, args.filePath);
+          case 'writeFile':
+            await FileManagerService.prototype.writeFile.call(this, args.filePath, args.content);
+            return `File written successfully to ${args.filePath}`;
+          case 'createDirectory':
+            await FileManagerService.prototype.createDirectory.call(this, args.directoryPath);
+            return `Directory created successfully at ${args.directoryPath}`;
+          case 'readDirectory':
+            return await FileManagerService.prototype.readDirectory.call(this, args.directoryPath);
+          default:
+            throw new Error(`Unsupported action: ${action}`);
+        }
+      }
+    })();
+  }
 }
 
 // FileReader Tool (LangChain)
 @Injectable()
-export class FileReaderTool {
+export class FileReaderTool extends Tool {
   name = 'FileReader';
   description = 'Reads the content of a file from the filesystem';
 
   // Method to read file content
-  async _call(input: string): Promise<string> {
+  async _call(filePath: string): Promise<string> {
     try {
-      const content = await fs.promises.readFile(input, 'utf-8');
-      return content;
+      return await fs.promises.readFile(filePath, 'utf-8');
     } catch (error) {
-      throw new Error(`Failed to read file at ${input}: ${error.message}`);
+      throw new Error(`Failed to read file at ${filePath}: ${error.message}`);
     }
   }
 }
 
 // FileWriter Tool (LangChain)
 @Injectable()
-export class FileWriterTool {
+export class FileWriterTool extends Tool {
   name = 'FileWriter';
   description = 'Writes content to a specified file on the filesystem';
 
   // Method to write content to file
-  async _call(input: { filePath: string, content: string }): Promise<void> {
+  async _call(input: { filePath: string; content: string }): Promise<string> {
     try {
       await fs.promises.writeFile(input.filePath, input.content, 'utf-8');
+      return `File successfully written to ${input.filePath}`;
     } catch (error) {
       throw new Error(`Failed to write to file at ${input.filePath}: ${error.message}`);
     }
