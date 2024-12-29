@@ -1,3 +1,5 @@
+// relative path: src/modules/command-executor/command-executor.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { exec } from 'child_process';
 import { promisify } from 'util';

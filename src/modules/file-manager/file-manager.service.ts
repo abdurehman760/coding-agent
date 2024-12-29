@@ -22,6 +22,11 @@ export class FileManagerService {
   // Write content to a file
   async writeFile(filePath: string, content: string): Promise<void> {
     try {
+      // Ensure the directory exists before writing
+      const directoryPath = path.dirname(filePath);
+      await this.createDirectory(directoryPath);
+
+      // Write the file
       await fsWriteFile(filePath, content, 'utf-8');
     } catch (error) {
       throw new Error(`Failed to write to file at ${filePath}: ${error.message}`);
@@ -61,5 +66,47 @@ export class FileManagerService {
   // Get the absolute path of a file or directory
   getAbsolutePath(filePath: string): string {
     return path.resolve(filePath);
+  }
+
+  // List files in a directory
+  async readDirectory(directoryPath: string): Promise<string[]> {
+    try {
+      return await fs.promises.readdir(directoryPath);
+    } catch (error) {
+      throw new Error(`Failed to list directory at ${directoryPath}: ${error.message}`);
+    }
+  }
+}
+
+// FileReader Tool (LangChain)
+@Injectable()
+export class FileReaderTool {
+  name = 'FileReader';
+  description = 'Reads the content of a file from the filesystem';
+
+  // Method to read file content
+  async _call(input: string): Promise<string> {
+    try {
+      const content = await fs.promises.readFile(input, 'utf-8');
+      return content;
+    } catch (error) {
+      throw new Error(`Failed to read file at ${input}: ${error.message}`);
+    }
+  }
+}
+
+// FileWriter Tool (LangChain)
+@Injectable()
+export class FileWriterTool {
+  name = 'FileWriter';
+  description = 'Writes content to a specified file on the filesystem';
+
+  // Method to write content to file
+  async _call(input: { filePath: string, content: string }): Promise<void> {
+    try {
+      await fs.promises.writeFile(input.filePath, input.content, 'utf-8');
+    } catch (error) {
+      throw new Error(`Failed to write to file at ${input.filePath}: ${error.message}`);
+    }
   }
 }

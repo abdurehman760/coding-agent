@@ -1,3 +1,5 @@
+// relative path: src/openai/openai.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { OpenAI } from 'openai';  // Ensure that this import is correct for your OpenAI SDK version
 

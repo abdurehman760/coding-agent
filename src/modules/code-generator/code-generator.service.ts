@@ -1,3 +1,5 @@
+// relative path: src/modules/code-generator/code-generator.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { FileManagerService } from '../file-manager/file-manager.service';
 import { OpenAiService } from '../../openai/openai.service';
@@ -17,6 +19,7 @@ export class CodeGeneratorService {
       - The prop values being displayed in JSX.
       - No TypeScript types, only JSX code.
       - Include basic React imports (if necessary).
+      - Do not include any enclosing markdown blocks like \`\`\`jsx or \`\`\`.
     `;
 
     try {
@@ -43,6 +46,7 @@ export class CodeGeneratorService {
         Here is the code: ${existingCode}
         Modify the code based on the following instructions: ${userInstructions}.
         Ensure that the changes are valid and the code remains functional.
+        Do not include any enclosing markdown blocks like \`\`\`.
       `;
 
       // Use OpenAiService to generate the modified code
