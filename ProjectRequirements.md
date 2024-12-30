@@ -1,5 +1,3 @@
-
-
 ### **Phase 1: Environment Setup**
 #### **Step 1: Initialize the Project**
 - Create a new **NestJS** project:
@@ -99,39 +97,44 @@
 
 ---
 
-### **Phase 6: Integration and Testing**
-#### **Step 11: End-to-End Workflow Testing**
-- Combine file management, command execution, and AI-powered tools into integrated workflows.
-- Test user scenarios:
-  - Parsing directories and generating React components.
-  - Editing existing files based on instructions.
-  - Running commands to set up a project environment.
+### **Phase 6: Additional Requirements**
+#### **Step 11: Directory Structure Parsing**
+- Implement functionality to parse a directory structure and list all files and directories.
+- Use this functionality to allow the user to specify a directory path in the console.
 
-#### **Step 12: Error Handling and Logging**
-- Add centralized logging using NestJS’s `LoggerService`.
-- Handle errors gracefully with clear messages and fallbacks.
+#### **Step 12: File Reading and Writing**
+- Ensure the `FileService` can read and write files as required by the user commands.
+- Implement error handling for scenarios like missing files or permission issues.
+
+#### **Step 13: Command Execution**
+- Implement the ability to run commands like setting up a NestJS project, installing dependencies, and running project creation commands.
+- Ensure safety checks are in place to prevent malicious commands.
+
+#### **Step 14: Code Generation and Editing**
+- Use OpenAI function calling to generate and edit code based on user instructions.
+- Ensure the generated code is saved correctly and modifications are applied as specified.
+
+#### **Step 15: Handling Plain Text Instructions**
+- Implement functionality to handle plain text instructions from the user.
+- Use OpenAI's natural language processing capabilities to interpret user commands.
+  - Example:
+    - Input: "Give me a React component in this folder."
+    - Workflow:
+      1. Parse the folder.
+      2. Generate the component.
+      3. Save the file.
+    - Input: "Fix the backend API in this file."
+    - Workflow:
+      1. Read the file.
+      2. Generate the required code modifications.
+      3. Save the modified file.
+
+#### **Step 16: Testing and Integration**
+- Build the functionalities separately, test them, and then combine them.
+- Use TypeScript for type safety and better code management.
+- Ensure interactions with the bot are through the console.
+- Utilize OpenAI structured output and assistants API if necessary.
+- Note: OpenAI assistants API may be useful for handling complex user interactions and improving the overall user experience.
 
 ---
 
-### **Phase 7: Documentation and Finalization**
-#### **Step 13: Documentation**
-- Write detailed documentation for:
-  - Setting up the project.
-  - Using the CLI.
-  - Understanding the architecture (services, tools, agents).
-
-#### **Step 14: Final Touches**
-- Refactor code for modularity and readability.
-- Add comments and inline documentation.
-- Optimize performance where needed.
-
----
-
-### **Development Workflow Summary**
-1. **Core Setup**: Configure NestJS, LangChain, and OpenAI.
-2. **Independent Modules**: Build and test file operations, command execution, and code generation.
-3. **LangChain Integration**: Develop tools, chains, and agents for dynamic workflows.
-4. **CLI Interface**: Enable user interactions through the console.
-5. **Testing and Refinement**: Test edge cases, log errors, and finalize the system.
-
-By following these steps, you can systematically develop the system while leveraging **NestJS** for structure and **LangChain** for dynamic task orchestration.
