@@ -17,6 +17,7 @@ export class CommandExecutorService {
     'touch',
     'npm install',
     'npm run build',
+    'npx @nestjs/cli new',
   ];
 
   // Execute a shell command and return the output
