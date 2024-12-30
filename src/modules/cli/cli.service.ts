@@ -46,6 +46,15 @@ export class CliService {
         await this.runSetupCommands();
         console.log('Setup completed successfully.');
       });
+
+    this.program
+      .command('list:directory <directoryPath>')
+      .description('List contents of a directory')
+      .action(async (directoryPath: string) => {
+        const contents = await this.fileManagerService.listDirectoryContents(directoryPath);
+        console.log(`Contents of ${directoryPath}:`);
+        contents.forEach(item => console.log(item));
+      });
   }
 
   private async runSetupCommands() {

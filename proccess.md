@@ -56,10 +56,22 @@
      Setup completed successfully.
      ```
 
+   - **List Directory Contents**
+     ```bash
+     node dist/main.js list:directory ./src/components
+     ```
+     Example output:
+     ```
+     Contents of ./src/components:
+     MyComponent.tsx
+     AnotherComponent.tsx
+     ```
+
 4. **Verify the Results**
    - For the `generate:react` command, check the specified folder for the generated React component file.
    - For the `edit:file` command, open the specified file and verify that the modification has been applied.
    - For the `run:setup` command, ensure that the setup commands have been executed successfully.
+   - For the `list:directory` command, verify that the listed contents match the actual contents of the specified directory.
 
 ### Notes
 - Ensure that the `.env` file is properly configured with necessary environment variables.

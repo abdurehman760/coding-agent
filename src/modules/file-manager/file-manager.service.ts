@@ -16,7 +16,13 @@ export class FileManagerService {
       const content = await fsReadFile(filePath, 'utf-8');
       return content;
     } catch (error) {
-      throw new Error(`Failed to read file at ${filePath}: ${error.message}`);
+      if (error.code === 'ENOENT') {
+        throw new Error(`File not found at ${filePath}`);
+      } else if (error.code === 'EACCES') {
+        throw new Error(`Permission denied to read file at ${filePath}`);
+      } else {
+        throw new Error(`Failed to read file at ${filePath}: ${error.message}`);
+      }
     }
   }
 
@@ -30,7 +36,11 @@ export class FileManagerService {
       // Write the file
       await fsWriteFile(filePath, content, 'utf-8');
     } catch (error) {
-      throw new Error(`Failed to write to file at ${filePath}: ${error.message}`);
+      if (error.code === 'EACCES') {
+        throw new Error(`Permission denied to write file at ${filePath}`);
+      } else {
+        throw new Error(`Failed to write to file at ${filePath}: ${error.message}`);
+      }
     }
   }
 
@@ -75,6 +85,16 @@ export class FileManagerService {
       return await fs.promises.readdir(directoryPath);
     } catch (error) {
       throw new Error(`Failed to list directory at ${directoryPath}: ${error.message}`);
+    }
+  }
+
+  // List files and directories in a specified directory
+  async listDirectoryContents(directoryPath: string): Promise<string[]> {
+    try {
+      const files = await fs.promises.readdir(directoryPath, { withFileTypes: true });
+      return files.map(file => file.name);
+    } catch (error) {
+      throw new Error(`Failed to list directory contents at ${directoryPath}: ${error.message}`);
     }
   }
 
