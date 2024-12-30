@@ -2,7 +2,7 @@
 #### **Step 1: Initialize the Project**
 - Create a new **NestJS** project:
   ```bash
-  nest new langchain-bot
+  nest new coding-agent
   ```
 - Install necessary dependencies:
   ```bash
